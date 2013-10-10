@@ -1627,10 +1627,12 @@ static int mov_write_tkhd_tag(AVIOContext *pb, MOVTrack *track, AVStream *st)
     avio_wb16(pb, 0); /* reserved */
 
     /* Matrix structure */
+#ifdef MOV_ROTATE
     if (st && st->metadata) {
         AVDictionaryEntry *rot = av_dict_get(st->metadata, "rotate", NULL, 0);
         rotation = (rot && rot->value) ? atoi(rot->value) : 0;
     }
+#endif
     if (rotation == 90) {
         write_matrix(pb,  0,  1, -1,  0, track->enc->height, 0);
     } else if (rotation == 180) {
