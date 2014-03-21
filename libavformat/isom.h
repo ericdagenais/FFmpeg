@@ -92,6 +92,12 @@ typedef struct MOVSbgp {
     unsigned int index;
 } MOVSbgp;
 
+typedef struct {
+    uint64_t track_duration;
+    int64_t media_time;
+    unsigned int media_rate;
+} MOVElst;
+
 typedef struct MOVStreamContext {
     AVIOContext *pb;
     int pb_is_copied;
@@ -109,6 +115,8 @@ typedef struct MOVStreamContext {
     unsigned *stps_data;  ///< partial sync sample for mpeg-2 open gop
     int ctts_index;
     int ctts_sample;
+    unsigned int elst_count; ///< number of 'edit' (elst atom)
+    MOVElst *elst_table;
     unsigned int sample_size; ///< may contain value calculated from stsd or value from stsz atom
     unsigned int stsz_sample_size; ///< always contains sample size from stsz atom
     unsigned int sample_count;

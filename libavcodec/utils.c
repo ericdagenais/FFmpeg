@@ -1988,7 +1988,12 @@ int attribute_align_arg avcodec_decode_video2(AVCodecContext *avctx, AVFrame *pi
                 memset(picture->buf, 0, sizeof(picture->buf));
             }
 
-            avctx->frame_number++;
+            if (avpkt->flags & AV_PKT_FLAG_DISCARD) {
+                *got_picture_ptr = 0;
+            }
+            else {
+                avctx->frame_number++;
+            }
             av_frame_set_best_effort_timestamp(picture,
                                                guess_correct_pts(avctx,
                                                                  picture->pkt_pts,
