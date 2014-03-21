@@ -1627,6 +1627,7 @@ static int mov_write_tkhd_tag(AVIOContext *pb, MOVTrack *track, AVStream *st)
     avio_wb16(pb, 0); /* reserved */
 
     /* Matrix structure */
+#ifdef PRESERVE_MOV_ROTATION_MATRIX
     if (st && st->metadata) {
         AVDictionaryEntry *rot = av_dict_get(st->metadata, "rotate", NULL, 0);
         rotation = (rot && rot->value) ? atoi(rot->value) : 0;
@@ -1640,6 +1641,12 @@ static int mov_write_tkhd_tag(AVIOContext *pb, MOVTrack *track, AVStream *st)
     } else {
         write_matrix(pb,  1,  0,  0,  1, 0, 0);
     }
+#else
+    /* Write matrix for 0 degree rotation: handle rotated source videos via
+     * rotate filter */
+    write_matrix(pb,  1,  0,  0,  1, 0, 0);
+#endif
+
     /* Track width and height, for visual only */
     if (st && (track->enc->codec_type == AVMEDIA_TYPE_VIDEO ||
                track->enc->codec_type == AVMEDIA_TYPE_SUBTITLE)) {
