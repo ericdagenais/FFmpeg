@@ -1,7 +1,7 @@
 FFmpeg MOV edit list patch
 --------------------------
 
-Based on a patch posted to the FFmpeg devel mailing list and newsgroup
+Based on a patch posted to the [FFmpeg devel mailing list and newsgroup] (https://gist.github.com/ericdagenais/9955424)
 
 2013-09-19 Eric Dagenais
 * handles common QuickTime Player edits but not all possible edit list combos.
