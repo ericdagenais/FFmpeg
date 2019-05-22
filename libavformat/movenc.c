@@ -2842,6 +2842,7 @@ static int mov_write_tkhd_tag(AVIOContext *pb, MOVMuxContext *mov,
         rotation = (rot && rot->value) ? atoi(rot->value) : 0;
     }
 #endif
+#ifdef PRESERVE_MOV_ROTATION_MATRIX
     if (display_matrix) {
         for (i = 0; i < 9; i++)
             avio_wb32(pb, display_matrix[i]);
@@ -2856,6 +2857,11 @@ static int mov_write_tkhd_tag(AVIOContext *pb, MOVMuxContext *mov,
     } else {
         write_matrix(pb,  1,  0,  0,  1, 0, 0);
     }
+#else
+    /* Write matrix for 0 degree rotation: handle rotated source videos via
+     * rotate filter */
+    write_matrix(pb,  1,  0,  0,  1, 0, 0);
+#endif
     /* Track width and height, for visual only */
     if (st && (track->par->codec_type == AVMEDIA_TYPE_VIDEO ||
                track->par->codec_type == AVMEDIA_TYPE_SUBTITLE)) {
